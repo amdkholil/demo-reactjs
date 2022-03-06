@@ -1,79 +1,30 @@
-import { Breadcrumb, Table } from "antd";
-import React, { Component } from "react";
+import { Breadcrumb } from "antd";
+import React, {Component} from "react";
+import { useParams } from "react-router";
+import CoinDetail from "./coin_detail";
+import CoinList from "./coin_list";
 
-class Coin extends Component {
+function Coin() {
 
-  state={
-    loading:true,
-    data:null,
+  let { id } = useParams();
 
-  }
+  return (
+    <div>
+      <Subtitle title={(typeof id === 'undefined')?'Coin List':'Coin Detail'} />
+      {(typeof id === 'undefined') ? <CoinList /> : <CoinDetail id={id} />}
+    </div>
+  );
+}
 
-  componentDidMount(){
-    this.fetch()
-  }
-
-  fetch = ()=>{
-    fetch('https://api.coinpaprika.com/v1/coins/')
-    .then(res=>res.json())
-    .then(data=>{
-      // console.log(data);
-      this.setState({
-        loading:false,
-        data:data
-      })
-    })
-  }
-
-  render() {
-    const dataSource = this.state.data
-
-    const columns = [
-      {
-        title: 'Id',
-        dataIndex: 'id',
-        key: 'id',
-        render: text => <a>{text}</a>
-      },
-      {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-      },
-      {
-        title: 'Symbol',
-        dataIndex: 'symbol',
-        key: 'symbol',
-      },
-      {
-        title: 'Rank',
-        dataIndex: 'rank',
-        key: 'rank',
-      },
-      {
-        title: 'Type',
-        dataIndex: 'type',
-        key: 'type',
-      },
-      {
-        title: 'Active',
-        dataIndex: 'is_active',
-        key: 'is_active',
-      },
-    ];
-
+class Subtitle extends Component {
+  render(h) {
+    let title = this.props.title
     return (
-      <div>
-        <Breadcrumb style={{ marginLeft: '4em', marginTop: '1.5em' }}>
-          <Breadcrumb.Item>
-            Coin list
-          </Breadcrumb.Item>
-        </Breadcrumb>
-
-        <div className="layout">
-          <Table dataSource={dataSource} columns={columns} />
-        </div>
-      </div>
+      <Breadcrumb style={{ marginLeft: '4em', marginTop: '1.5em' }}>
+        <Breadcrumb.Item style={{ color: '#aaaaaa' }}>
+          {title}
+        </Breadcrumb.Item>
+      </Breadcrumb>
     )
   }
 }
